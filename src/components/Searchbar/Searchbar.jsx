@@ -8,7 +8,7 @@ class Searchbar extends Component {
   };
 
   handleSearchImage = e => {
-    this.setState({ query: e.currentTarget.value.toLowerCase() });
+    this.setState({ query: e.target.value.toLowerCase() });
   };
 
   handleSubmit = e => {
@@ -52,12 +52,3 @@ class Searchbar extends Component {
 }
 
 export default Searchbar;
-
-// const Searchbar = ({ onSubmit }) => {
-//   // console.log(onSubmit());
-//   return (
-
-//   );
-// };
-
-// export default Searchbar;
