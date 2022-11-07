@@ -4,13 +4,19 @@ import { getImagesApi } from 'services/api';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Button from 'components/Button';
 
+// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
+import { toast } from 'react-toastify';
+import Loader from 'components/Loader';
+
 class ImageGallery extends Component {
   state = {
     images: [],
     page: 1,
     isLoading: false,
     error: null,
-    something: 'Search images...',
+    totalHits: 0,
+    searchImageText: 'Search image',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,46 +33,75 @@ class ImageGallery extends Component {
   }
 
   getImages = () => {
-    this.setState({ isLoading: true, something: '' });
+    this.setState({
+      isLoading: true,
+      searchImageText: '',
+      error: null,
+      totalHits: 0,
+    });
     getImagesApi({ q: this.props.query, page: this.state.page })
-      .then(res =>
+      .then(data => {
+        if (!data.hits.length) {
+          toast.warn('No images by your request!');
+        }
         this.setState(prevState => ({
-          images: [...prevState.images, ...res],
-        }))
-      )
+          images: [...prevState.images, ...data.hits],
+          totalHits: data.totalHits,
+        }));
+      })
       .catch(error => {
         this.setState({ error });
       })
-      .finally(() => this.setState({ isLoading: false }));
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   };
 
   handleLoadMore = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
+    this.setState(prev => ({ page: prev.page + 1, isLoading: true }));
+
+    const { height: cardHeight } = document
+      .querySelector('#root .ImageGallery_ImageGallery__Dgfuw')
+      .firstElementChild.getBoundingClientRect();
+
+    setTimeout(() => {
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
+    }, 500);
   };
 
   render() {
-    const { images, isLoading, error, something } = this.state;
+    const { images, isLoading, error, searchImageText, totalHits } = this.state;
     const { handleLoadMore } = this;
+    const { toggleModal } = this.props;
 
     return (
       <>
         {images.length === 0 && (
-          <div className={s.SearchTextBlock}>{something}</div>
+          <p className={s.SearchTextBlock}>{searchImageText}</p>
         )}
-        {error && <div>{error.message}</div>}
-        {isLoading && <div className={s.SearchTextBlock}>Donwloading...</div>}
+        {error && <p className={s.SearchTextBlock}>{error.message}</p>}
+        {isLoading && <Loader />}
         <ul className={s.ImageGallery}>
           {images.length > 0 &&
-            images.map(({ id, webformatURL, largeImageURL }, idx) => (
-              <ImageGalleryItem
-                key={idx}
-                id={id}
-                webformatURL={webformatURL}
-                largeImageURL={largeImageURL}
-              />
-            ))}
+            images.map(({ id, webformatURL, largeImageURL }, idx) => {
+              return (
+                <ImageGalleryItem
+                  key={idx}
+                  id={id}
+                  webformatURL={webformatURL}
+                  largeImageURL={largeImageURL}
+                  toggleModal={toggleModal}
+                />
+              );
+            })}
         </ul>
-        {images.length > 0 && <Button handleLoadMore={handleLoadMore} />}
+
+        {images.length !== totalHits ? (
+          <Button handleLoadMore={handleLoadMore} />
+        ) : null}
       </>
     );
   }

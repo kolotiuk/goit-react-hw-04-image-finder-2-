@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import { toast } from 'react-toastify';
+
 import s from './Searchbar.module.scss';
 
 class Searchbar extends Component {
@@ -15,8 +17,7 @@ class Searchbar extends Component {
     e.preventDefault();
 
     if (this.state.query.trim() === '') {
-      alert('Введыть');
-      return;
+      return toast.info('Please, write something!');
     }
 
     this.props.onSubmit(this.state.query);

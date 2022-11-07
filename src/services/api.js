@@ -13,11 +13,6 @@ export const getImagesApi = async ({ q, page }) => {
   };
 
   return axios.get().then(({ data }) => {
-    console.log(data);
-    return data.hits;
+    return data;
   });
 };
-
-// .get(
-//   `?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-// )
