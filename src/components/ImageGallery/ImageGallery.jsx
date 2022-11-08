@@ -4,8 +4,6 @@ import { getImagesApi } from 'services/api';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Button from 'components/Button';
 
-// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-
 import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
 
@@ -44,6 +42,9 @@ class ImageGallery extends Component {
         if (!data.hits.length) {
           toast.warn('No images by your request!');
         }
+        if (data.hits.length < 12) {
+          toast.warn('Its all images for your request!');
+        }
         this.setState(prevState => ({
           images: [...prevState.images, ...data.hits],
           totalHits: data.totalHits,
@@ -59,17 +60,17 @@ class ImageGallery extends Component {
 
   handleLoadMore = () => {
     this.setState(prev => ({ page: prev.page + 1, isLoading: true }));
+    this.handleWindowScrollBy();
+  };
 
-    const { height: cardHeight } = document
-      .querySelector('#root .ImageGallery_ImageGallery__Dgfuw')
-      .firstElementChild.getBoundingClientRect();
-
+  handleWindowScrollBy = () => {
     setTimeout(() => {
       window.scrollBy({
-        top: cardHeight * 2,
+        top: window.innerHeight - 72 + 16,
+        left: 0,
         behavior: 'smooth',
       });
-    }, 500);
+    }, 600);
   };
 
   render() {

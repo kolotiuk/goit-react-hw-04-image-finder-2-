@@ -4,7 +4,6 @@ import s from './Modal.module.scss';
 
 const modalRoot = document.querySelector('#modal');
 
-// class Modal extends Component({ largeImage, closeModal }) => {
 class Modal extends Component {
   handleEsc = e => {
     if (e.code === 'Escape') {
