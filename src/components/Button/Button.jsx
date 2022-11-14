@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import s from './Button.module.scss';
 
 const Button = ({ handleLoadMore }) => {
@@ -10,3 +12,5 @@ const Button = ({ handleLoadMore }) => {
 };
 
 export default Button;
+
+Button.propTypes = { handleLoadMore: PropTypes.func.isRequired };

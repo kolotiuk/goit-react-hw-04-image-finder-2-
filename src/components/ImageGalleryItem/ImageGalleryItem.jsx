@@ -1,4 +1,5 @@
-// import Modal from 'components/Modal';
+import PropTypes from 'prop-types';
+
 import s from './ImageGalleryItem.module.scss';
 
 const ImageGalleryItem = ({ webformatURL, largeImageURL, toggleModal }) => {
@@ -25,3 +26,9 @@ const ImageGalleryItem = ({ webformatURL, largeImageURL, toggleModal }) => {
 };
 
 export default ImageGalleryItem;
+
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+};

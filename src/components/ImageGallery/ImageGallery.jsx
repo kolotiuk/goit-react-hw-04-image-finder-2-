@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import s from './ImageGallery.module.scss';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Button from 'components/Button';
@@ -48,3 +49,22 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
+
+ImageGallery.propTypes = {
+  handleLoadMore: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    })
+  ),
+  isLoading: PropTypes.bool.isRequired,
+  error: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.string.isRequired,
+  ]),
+  searchImageText: PropTypes.string.isRequired,
+  totalHits: PropTypes.number.isRequired,
+};
